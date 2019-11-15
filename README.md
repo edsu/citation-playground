@@ -1,5 +1,5 @@
 Drop article PDFs into the docs directory and then run process.rb to extract
-citations from them using [AnyStyle]https://github.com/inukshuk/anystyle().
+citations from them using [AnyStyle](https://github.com/inukshuk/anystyle).
 
 1. install Ruby
 2. gem install bundler
