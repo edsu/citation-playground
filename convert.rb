@@ -4,13 +4,19 @@ require 'json'
 json_files = Dir.glob('./docs/*.json')
 csv = CSV.open('citations.csv', 'wb')
 
+# output column headers 
+
 csv << [
   'type',
   'date',
   'title',
-  'journal',
+  'container-title',
   'volume',
-  'issue'
+  'issue',
+  'authors',
+  'publisher',
+  'location',
+  'file'
 ]
 
 # a function for returning either the first element of a list or a string
@@ -25,17 +31,43 @@ def first(c)
   end
 end
 
-json_files.each do |f| 
-  citations = JSON.parse(File.read(f))
+# a function for unpacking the author hash into "last, first"
+
+def name(n)
+  if ! n
+    return ''
+  elsif n['family'] and n['given']
+    return n['family'] + ', ' + n['given']
+  elsif n['family']
+    return n['family']
+  else
+    return n['given']
+  end
+end
+
+# read citations from each csl-json file and write to the csv
+
+json_files.each do |json_file| 
+  citations = JSON.parse(File.read(json_file))
   citations.each do |c|
-    puts c
+  
+    # unpack the authors into a semicolon delimted list
+    authors = ''
+    if c['author'] and c['author'].length > 0
+      authors = c['author'].map {|a| name(a)}.join(' ; ')
+    end
+
     csv << [
       first(c['type']),
       first(c['date']),
       first(c['title']),
-      first(c['journal']),
+      first(c['container-title']),
       first(c['volume']),
-      first(c['issue'])
+      first(c['issue']),
+      authors,
+      first(c['publisher']),
+      first(c['location']),
+      json_file
     ]
   end
 end

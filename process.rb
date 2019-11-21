@@ -1,15 +1,24 @@
 require 'json'
 require 'anystyle'
 
-pdf_files = Dir.glob('./docs/*.pdf')
+# a function that parses citations from a string and writes them out as json
 
-pdf_files.each do |f| 
-  AnyStyle.find(f.untaint).each do |s|
-    citations = AnyStyle.parse(s) 
-    citations_json = JSON.pretty_generate(citations)
-    citations_file = f.sub('.pdf', '.json')
-    open(citations_file, 'w') do |fh| 
-      fh.write(citations_json)
-    end
+def parse(s, json_file)
+  citations = AnyStyle.parse(s) 
+  puts "#{json_file} [#{citations.length}]"
+  citations_json = JSON.pretty_generate(citations)
+  open(json_file, 'w') do |fh| 
+    fh.write(citations_json)
   end
+end
+
+Dir.glob('./docs/*.pdf').each do |f|
+  AnyStyle.find(f.untaint).each do |s|
+    parse(s, f.sub('.pdf', '.json'))
+  end
+end
+
+Dir.glob('./docs/*.txt').each do |f|
+  s = File.read(f)
+  parse(s, f.sub('.txt', '.json'))
 end
