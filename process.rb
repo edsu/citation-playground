@@ -12,13 +12,27 @@ def parse(s, json_file)
   end
 end
 
+# process pdfs of articles
+
 Dir.glob('./docs/*.pdf').each do |f|
-  AnyStyle.find(f.untaint).each do |s|
-    parse(s, f.sub('.pdf', '.json'))
+  json_file = f.sub('.pdf', '.json')
+  if File.file? json_file
+    puts "#{json_file} already exists, skipping."
+  else
+    AnyStyle.find(f.untaint).each do |s|
+      parse(s, json_file)
+    end
   end
 end
 
+# process text files (containing only citations)
+
 Dir.glob('./docs/*.txt').each do |f|
-  s = File.read(f)
-  parse(s, f.sub('.txt', '.json'))
+  json_file = f.sub('.txt', '.json')
+  if File.file? json_file
+    puts "#{json_file} already exists, skipping."
+  else
+    s = File.read(f)
+    parse(s, json_file)
+  end
 end

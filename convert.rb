@@ -14,6 +14,7 @@ csv << [
   'volume',
   'issue',
   'authors',
+  'first-author',
   'publisher',
   'location',
   'file'
@@ -53,8 +54,10 @@ json_files.each do |json_file|
   
     # unpack the authors into a semicolon delimted list
     authors = ''
+    first_author = ''
     if c['author'] and c['author'].length > 0
       authors = c['author'].map {|a| name(a)}.join(' ; ')
+      first_author = name(c['author'][0])
     end
 
     csv << [
@@ -65,6 +68,7 @@ json_files.each do |json_file|
       first(c['volume']),
       first(c['issue']),
       authors,
+      first_author,
       first(c['publisher']),
       first(c['location']),
       json_file
