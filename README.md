@@ -37,7 +37,7 @@ a .json extension. The type of JSON that AnyStyle creates is
 
 If you wish you can also convert all the JSON files into a single CSV file.
 
-    ruby convert.rba
+    ruby convert.rb
 
 ## Credits 
 
